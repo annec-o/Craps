@@ -32,22 +32,30 @@ class CrapsGame(object):
                 break
 
     def play_game(self):
+        point_number = 0
+
         if os.name == "nt":
             os.system("cls")
         else:
             os.system("clear")
+
         diceOne = random.randrange(0, 8)
         diceTwo = random.randrange(0, 8)
         print("Playing the game or craps!")
 
+        """IF POINT NUMBER IS NOT SET"""
         """If the shooter rolls a 7 or 11 you win."""
         if diceOne+diceTwo == 7 or diceOne+diceTwo == 11:
             self.print_result("WINNER")
-        else:
-            self.print_result("LOOSER")
         """If the shooter rolls a 2, 3 or 12, you lose."""
+        elif diceOne+diceTwo == 2 or diceOne+diceTwo == 3 or diceOne+diceTwo == 12:
+            self.print_result("LOOSER")
         """If the shooter rolls any other number,that number becomes the point number."""
+        else:
+            point_number = diceOne + diceTwo
+
         """The shooter must roll that number again before a seven is rolled."""
+
         """If that happens, you win even money for your passline bet."""
         """If a seven is rolled before the point number is rolled again, you lose."""
     def print_result(self, result):
