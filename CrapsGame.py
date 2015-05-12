@@ -2,10 +2,12 @@ __author__ = 'Jamie Olsen'
 import os
 import random
 
-class CrapsGame(object):
 
+class CrapsGame(object):
     money = 500
     point_number = 0
+    end_game = False
+    amount = 0
 
 
     def dice(self, dice):
@@ -34,67 +36,117 @@ class CrapsGame(object):
                 pass
             elif choice == 4:
                 break
+            else:
+                break
 
-    def play_game(self,credits):
+    def play_game(self, credits):
 
-
+        self.end_game = False
         if os.name == "nt":
             os.system("cls")
         else:
             os.system("clear")
 
-        diceOne = random.randrange(0, 8)
-        diceTwo = random.randrange(0, 8)
-        roll = diceOne + diceTwo
-
-        winning_numbers = [7,11]
-        losing_numbers = [2,3,12]
+        winning_numbers = [7, 11]
+        losing_numbers = [2, 3, 12]
+        """
+        Each round has two phases: Come Out and Point. To start a round, the shooter makes one or more Come Out rolls. A Come Out
+        roll of 2, 3 or 12 (called Craps, the shooter is said to 'crap out') ends the round with players losing their Pass Line bets.
+        A Come Out roll of 7 or 11 (a Natural) results in a win for Pass Line bets. The shooter continues to make Come Out rolls
+        until he rolls 4, 5, 6, 8, 9, or 10, which number becomes the Point."""
         """IF POINT NUMBER IS NOT SET"""
         """If the shooter rolls a 7 or 11 you win."""
-        if self.point_number != 0:
-            if roll in winning_numbers:
+        while self.end_game is False:
+
+            if self.point_number == 0:
+                #make a passline bet+
+                bet_input = input("Would you like to make a pass line bet? [Y/n]")
+                bet_input.lower()
+                if bet_input == "y":
+                    self.amount = input("Please enter the pass line bet: ")
+                    bet_input = "Q"
+                    diceOne = random.randrange(0, 7)
+                    diceTwo = random.randrange(0, 7)
+                    roll = diceOne + diceTwo
+                    print("You rolled a {}".format(roll))
+                if roll in winning_numbers:
+                    self.end_game = True
+                    self.point_number = 0
+                    self.winner()
+                elif roll in losing_numbers:
+                    """If the shooter rolls a 2, 3 or 12, you lose."""
+                    self.end_game = True
+                    self.point_number = 0
+                    print(input("Your a loser!"))
+                else:
+                    print("The point number is: {}".format(roll))
+                    self.point_number = roll
+                    roll_again = input("Press enter to roll the dice...")
+            elif roll in winning_numbers:
+                self.end_game = True
+                self.point_number = 0
                 self.winner()
-            elif roll in losing_numbers: """If the shooter rolls a 2, 3 or 12, you lose."""
-                #self.looser()
-            else:        """If the shooter rolls any other number,that number becomes the point number."""
-                #self.point_number = roll
+            elif roll in losing_numbers:
+                """If the shooter rolls a 2, 3 or 12, you lose."""
+                self.end_game = True
+                self.money -= int(self.amount)
+                print(input("Your a loser! you lost {}".format(self.amount)))
+            elif roll == self.point_number:
+                """If the shooter rolls the point number, the result is a win for bets on the Pass Line.
+                If the shooter rolls a seven (a Seven-out), the pass line loses and the round ends."""
+                self.money += int(self.amount)
+                self.point_number = 0
+                #if point_number == roll
+                #   Pass line wins!
 
-        """IF POINT NUMBER IS SET"""
-        """The shooter must roll that number again before a seven is rolled."""
-        """If that happens, you win even money for your passline bet."""
-        """If a seven is rolled before the point number is rolled again, you lose."""
+            else:
+                print(input("Press enter to roll again... "))
 
+
+
+
+
+
+    """IF POINT NUMBER IS SET"""
+    """The shooter must roll that number again before a seven is rolled."""
+    """If that happens, you win even money for your passline bet."""
+    """If a seven is rolled before the point number is rolled again, you lose."""
+
+
+    def show_roll(self):
+        pass
 
     def print_result(self, result):
         print(result)
 
+
     def winner(self):
-        """
-        What happens when you win the game?
-        """
-        pass
+        print("Winner winner chicken dinner!")
+        choice = input("Would you like to play again? [Y/n]")
+        if choice.lower() == "y":
+            self.play_game()
+        else:
+            self.menu()
+
 
     def looser(self):
         """
-        what happens when you loose a game
-        :return:
-        """
+            what happens when you loose a game
+            :return:
+            """
         pass
 
 
     def __repr__(self, *args, **kwargs):
         return super().__repr__(*args, **kwargs)
 
+
 game = CrapsGame()
 game.menu()
 
 """
-Each round has two phases: Come Out and Point. To start a round, the shooter makes one or more Come Out rolls. A Come Out
-roll of 2, 3 or 12 (called Craps, the shooter is said to 'crap out') ends the round with players losing their Pass Line bets.
-A Come Out roll of 7 or 11 (a Natural) results in a win for Pass Line bets. The shooter continues to make Come Out rolls
-until he rolls 4, 5, 6, 8, 9, or 10, which number becomes the Point. The dealer then moves an On button to the point number
-signifying the second phase of the round. If the shooter rolls the point number, the result is a win for bets on the Pass Line.
-If the shooter rolls a seven (a Seven-out), the pass line loses and the round ends.
+ The dealer then moves an On button to the point number
+signifying the second phase of the round.
 
 The first roll of the dice in a betting round is the Come Out roll - a new game in Craps begins with the Come Out roll.
 A Come Out roll can be made only when the previous shooter fails to make a winning roll, that is, fails to make the Point
