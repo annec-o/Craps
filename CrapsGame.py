@@ -8,6 +8,7 @@ class CrapsGame(object):
     point_number = 0
     end_game = False
     amount = 0
+    roll = 0
 
 
     def dice(self, dice):
@@ -17,6 +18,13 @@ class CrapsGame(object):
 
         choice = 0
         while choice != 4:
+            print(" ----- ")
+            print("|O - 0|")
+            print("|- 0 -|")
+            print("|O - 0|")
+            print(" ----- ")
+
+
             print("-------------------------------")
             print("Welcome to the game of craps!")
             print("1. Play game")
@@ -57,7 +65,9 @@ class CrapsGame(object):
         """IF POINT NUMBER IS NOT SET"""
         """If the shooter rolls a 7 or 11 you win."""
         while self.end_game is False:
-
+            diceOne = random.randrange(0, 7)
+            diceTwo = random.randrange(0, 7)
+            self.roll = diceOne + diceTwo
             if self.point_number == 0:
                 #make a passline bet+
                 bet_input = input("Would you like to make a pass line bet? [Y/n]")
@@ -65,33 +75,31 @@ class CrapsGame(object):
                 if bet_input == "y":
                     self.amount = input("Please enter the pass line bet: ")
                     bet_input = "Q"
-                    diceOne = random.randrange(0, 7)
-                    diceTwo = random.randrange(0, 7)
-                    roll = diceOne + diceTwo
-                    print("You rolled a {}".format(roll))
-                if roll in winning_numbers:
+
+                    print("You rolled a {}".format(self.roll))
+                if self.roll in winning_numbers:
                     self.end_game = True
                     self.point_number = 0
                     self.winner()
-                elif roll in losing_numbers:
+                elif self.roll in losing_numbers:
                     """If the shooter rolls a 2, 3 or 12, you lose."""
                     self.end_game = True
                     self.point_number = 0
                     print(input("Your a loser!"))
                 else:
-                    print("The point number is: {}".format(roll))
-                    self.point_number = roll
+                    print("The point number is: {}".format(self.roll))
+                    self.point_number = self.roll
                     roll_again = input("Press enter to roll the dice...")
-            elif roll in winning_numbers:
+            elif self.roll in winning_numbers:
                 self.end_game = True
                 self.point_number = 0
                 self.winner()
-            elif roll in losing_numbers:
+            elif self.roll in losing_numbers:
                 """If the shooter rolls a 2, 3 or 12, you lose."""
                 self.end_game = True
                 self.money -= int(self.amount)
                 print(input("Your a loser! you lost {}".format(self.amount)))
-            elif roll == self.point_number:
+            elif self.roll == self.point_number:
                 """If the shooter rolls the point number, the result is a win for bets on the Pass Line.
                 If the shooter rolls a seven (a Seven-out), the pass line loses and the round ends."""
                 self.money += int(self.amount)
@@ -121,6 +129,7 @@ class CrapsGame(object):
 
 
     def winner(self):
+        self.point_number = 0
         print("Winner winner chicken dinner!")
         choice = input("Would you like to play again? [Y/n]")
         if choice.lower() == "y":
@@ -129,7 +138,7 @@ class CrapsGame(object):
             self.menu()
 
 
-    def looser(self):
+    def loser(self):
         """
             what happens when you loose a game
             :return:
