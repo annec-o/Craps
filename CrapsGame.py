@@ -9,8 +9,8 @@ class CrapsGame(object):
     end_game = False
     amount = 0
     roll = 0
-    dice_list = ["0","0","0"],["-","0","-"],["-","-","-"],["0","-","0"]
-    dice_number = {1:[2,1,2],2:[2,3,2],3:[2,0,2],4:[3,2,3],5:[3,1,3],6:[3,3,3]}
+    dice_list = ["|0|","|0|","|0|"],["| |","|0|","| |"],["| |","| |","| |"],["|0|","| |","|0|"],[" _ "," _ "," _ "]
+    dice_number = {1:[4,2,4,1,4,2],2:[4,2,4,3,4,2],3:[4,2,4,0,4,2],4:[4,3,4,2,4,3],5:[4,3,4,1,4,3],6:[4,3,4,3,4,3]}
     diceOne = 1
     diceTwo = 1
 
@@ -131,10 +131,10 @@ class CrapsGame(object):
         print(input("Your a loser!"))
 
     def print_dice(self, die1, die2):
-        for index in range(3):
+        for index in range(6):
             die_1 = " ".join(self.dice_list[self.dice_number[die1][index]])
             die_2 = " ".join(self.dice_list[self.dice_number[die2][index]])
-            print("|{}| |{}|".format(die_1, die_2))
+            print("{}    {}".format(die_1, die_2))
         print("You rolled a {}".format(self.roll))
 
 
