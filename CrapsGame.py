@@ -9,22 +9,14 @@ class CrapsGame(object):
     end_game = False
     amount = 0
     roll = 0
-
-
-    def dice(self, dice):
-        return True
+    dice_list = ["0","0","0"],["-","0","-"],["-","-","-"],["0","-","0"]
+    dice_number = {1:[2,1,2],2:[2,3,2],3:[2,0,2],4:[3,2,3],5:[3,1,3],6:[3,3,3]}
+    diceOne = 1
+    diceTwo = 1
 
     def menu(self):
-
         choice = 0
         while choice != 4:
-            print(" ----- ")
-            print("|O - 0|")
-            print("|- 0 -|")
-            print("|O - 0|")
-            print(" ----- ")
-
-
             print("-------------------------------")
             print("Welcome to the game of craps!")
             print("1. Play game")
@@ -35,9 +27,7 @@ class CrapsGame(object):
             choice = int(input())
 
             if choice == 1:
-                print("Playing the game or craps!")
-                print("You have {} credits".format(self.money))
-                self.play_game(credits)
+                self.play_game()
             elif choice == 2:
                 pass
             elif choice == 3:
@@ -47,7 +37,7 @@ class CrapsGame(object):
             else:
                 break
 
-    def play_game(self, credits):
+    def play_game(self):
 
         self.end_game = False
         if os.name == "nt":
@@ -55,6 +45,8 @@ class CrapsGame(object):
         else:
             os.system("clear")
 
+        print("Playing the game or craps!")
+        print("You have {} credits".format(self.money))
         winning_numbers = [7, 11]
         losing_numbers = [2, 3, 12]
         """
@@ -65,37 +57,29 @@ class CrapsGame(object):
         """IF POINT NUMBER IS NOT SET"""
         """If the shooter rolls a 7 or 11 you win."""
         while self.end_game is False:
-            diceOne = random.randrange(0, 7)
-            diceTwo = random.randrange(0, 7)
-            self.roll = diceOne + diceTwo
+            self.diceOne = random.randrange(1, 6)
+            self.diceTwo = random.randrange(1, 6)
+            self.roll = self.diceOne + self.diceTwo
             if self.point_number == 0:
                 #make a passline bet+
                 bet_input = input("Would you like to make a pass line bet? [Y/n]")
                 bet_input.lower()
                 if bet_input == "y":
                     self.amount = input("Please enter the pass line bet: ")
-                    bet_input = "Q"
-
-                    print("You rolled a {}".format(self.roll))
+                    bet_input = 0
+                    self.print_dice(self.diceOne, self.diceTwo)
                 if self.roll in winning_numbers:
-                    self.end_game = True
-                    self.point_number = 0
                     self.winner()
                 elif self.roll in losing_numbers:
                     """If the shooter rolls a 2, 3 or 12, you lose."""
-                    self.end_game = True
-                    self.point_number = 0
-                    print(input("Your a loser!"))
+                    self.loser()
                 else:
-                    print("The point number is: {}".format(self.roll))
-                    self.point_number = self.roll
-                    roll_again = input("Press enter to roll the dice...")
+                    self.set_point()
             elif self.roll in winning_numbers:
-                self.end_game = True
-                self.point_number = 0
                 self.winner()
             elif self.roll in losing_numbers:
                 """If the shooter rolls a 2, 3 or 12, you lose."""
+                self.print_dice(self.diceOne, self.diceTwo)
                 self.end_game = True
                 self.money -= int(self.amount)
                 print(input("Your a loser! you lost {}".format(self.amount)))
@@ -108,12 +92,8 @@ class CrapsGame(object):
                 #   Pass line wins!
 
             else:
+                self.print_dice(self.diceOne, self.diceTwo)
                 print(input("Press enter to roll again... "))
-
-
-
-
-
 
     """IF POINT NUMBER IS SET"""
     """The shooter must roll that number again before a seven is rolled."""
@@ -127,23 +107,35 @@ class CrapsGame(object):
     def print_result(self, result):
         print(result)
 
+    def set_point(self):
+        self.print_dice(self.diceOne, self.diceTwo)
+        print("The point number is: {}".format(self.roll))
+        self.point_number = self.roll
+        roll_again = input("Press enter to roll the dice again...")
 
     def winner(self):
+        self.print_dice(self.diceOne, self.diceTwo)
+        self.end_game = True
         self.point_number = 0
         print("Winner winner chicken dinner!")
         choice = input("Would you like to play again? [Y/n]")
         if choice.lower() == "y":
             self.play_game()
         else:
-            self.menu()
-
+            pass
 
     def loser(self):
-        """
-            what happens when you loose a game
-            :return:
-            """
-        pass
+        self.print_dice(self.diceOne, self.diceTwo)
+        self.end_game = True
+        self.point_number = 0
+        print(input("Your a loser!"))
+
+    def print_dice(self, die1, die2):
+        for index in range(3):
+            die_1 = " ".join(self.dice_list[self.dice_number[die1][index]])
+            die_2 = " ".join(self.dice_list[self.dice_number[die2][index]])
+            print("|{}| |{}|".format(die_1, die_2))
+        print("You rolled a {}".format(self.roll))
 
 
     def __repr__(self, *args, **kwargs):
