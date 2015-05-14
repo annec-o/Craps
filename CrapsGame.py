@@ -106,6 +106,11 @@ class CrapsGame(object):
         self.end_game = True
         self.point_number = 0
         print(input("Your a loser!"))
+        choice = input("Would you like to play again? [Y/n]")
+        if choice.lower() == "y":
+            self.play_game()
+        else:
+            pass
 
     def print_dice(self, die1, die2):
         print(" _____________     _____________")
