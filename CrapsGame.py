@@ -4,6 +4,7 @@ import random
 
 
 class CrapsGame(object):
+
     money = 500
     point_number = 0
     end_game = False
@@ -14,13 +15,14 @@ class CrapsGame(object):
                         ["   *         *"],\
                         ["  *           *"],\
 
-    dice_row_list = ["[0]","[0]","[0]"],["[ ]","[0]","[ ]"],["[ ]","[ ]","[ ]"],["[0]","[ ]","[0]"]
+    dice_row_list = ["|","[0]","[0]","[0]","|"],["|","[_]","[0]","[_]","|"],["|","[_]","[_]","[_]","|"],["|","[0]","[_]","[0]","|"]
     dice_dict = {1:[2,1,2],2:[2,3,2],3:[2,0,2],4:[3,2,3],5:[3,1,3],6:[3,3,3]}
     diceOne = 1
     diceTwo = 1
 
     def menu(self):
         choice = 0
+        self.clear_screen()
         while choice != 4:
             self.print_welcome("craps")
             print("1. Play game")
@@ -50,26 +52,22 @@ class CrapsGame(object):
         while self.end_game is False:
 
             if self.point_number == 0:
+
                 self.come_out_roll()
             else:
+
                 self.roll_the_dice()
             if self.roll == losing_numbers:
+
                 self.loser()
             elif self.roll == winning_numbers:
+
                 self.winner()
             else:
+
                 print(input("press any button to roll again..."))
                 self.roll_the_dice()
 
-
-
-
-
-
-    """IF POINT NUMBER IS SET"""
-    """The shooter must roll that number again before a seven is rolled."""
-    """If that happens, you win even money for your passline bet."""
-    """If a seven is rolled before the point number is rolled again, you lose."""
 
     def print_welcome(self, game):
         message = "* Welcome to the game of {}! *".format(game)
@@ -78,6 +76,7 @@ class CrapsGame(object):
         print("*" * (len(message)))
 
     def roll_the_dice(self):
+        self.clear_screen()
         self.diceOne = random.randrange(1, 6)
         self.diceTwo = random.randrange(1, 6)
         self.roll = self.diceOne + self.diceTwo
@@ -87,15 +86,13 @@ class CrapsGame(object):
         print(result)
 
     def set_point(self):
-        self.print_dice(self.diceOne, self.diceTwo)
+        print()
         self.point_button()
+        print()
         print("The point number is set at: {}".format(self.roll))
         self.point_number = self.roll
-        roll_again = input("Press enter to roll the dice again...")
-        self.roll_the_dice()
 
     def winner(self):
-        self.print_dice(self.diceOne, self.diceTwo)
         self.end_game = True
         self.point_number = 0
         print("Winner winner chicken dinner!")
@@ -106,16 +103,19 @@ class CrapsGame(object):
             pass
 
     def loser(self):
-        self.print_dice(self.diceOne, self.diceTwo)
         self.end_game = True
         self.point_number = 0
         print(input("Your a loser!"))
 
     def print_dice(self, die1, die2):
+        print(" _____________     _____________")
+        print("|  _   _   _  |   |  _   _   _  |")
         for index in range(3):
             die_1 = " ".join(self.dice_row_list[self.dice_dict[die1][index]])
             die_2 = " ".join(self.dice_row_list[self.dice_dict[die2][index]])
             print("{}   {}".format(die_1, die_2))
+        print("|_____________|   |_____________|")
+        print()
         print("You rolled a {}".format(self.roll))
 
     def point_button(self):
@@ -123,7 +123,7 @@ class CrapsGame(object):
             pointButton = " ".join((self.point_button_list[x]))
             print("{}".format(pointButton))
         print(" *    POINT    *")
-        print(" *     SET     *")
+        print(" *    # SET    *")
         for x in range(len(self.point_button_list)-1,-1,-1):
             pointButton = " ".join((self.point_button_list[x]))
             print("{}".format(pointButton))
@@ -149,14 +149,10 @@ class CrapsGame(object):
             self.roll_the_dice()
 
         if self.roll in winning_numbers:
-            self.print_dice(self.diceOne, self.diceTwo)
             self.winner()
         elif self.roll in losing_numbers:
-            """If the shooter rolls a 2, 3 or 12, you lose."""
-            self.print_dice(self.diceOne, self.diceTwo)
             self.loser()
         else:
-            self.print_dice(self.diceOne, self.diceTwo)
             self.set_point()
 
 
